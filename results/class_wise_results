@@ -1,0 +1,88 @@
+1.Model average with ssd-subset:
+
+
+Average Precision of articulated_truck: 0.82047266
+
+Average Precision of bicycle: 0.84451294
+
+Average Precision of bus: 0.91839415
+
+Average Precision of car: 0.89970833
+
+Average Precision of motorcycle: 0.8891039
+
+Average Precision of motorized_vehicle: 0.5229708
+
+Average Precision of non-motorized_vehicle: 0.41705552
+
+Average Precision of pedestrian: 0.5407489
+
+Average Precision of pickup_truck: 0.8639058
+
+Average Precision of single_unit_truck: 0.6060746
+
+Average Precision of work_van: 0.68503886
+
+Mean Average Precision: 0.72799873
+
+	
+
+2. Weighted average with ssd-subset (0.2,0.8,0.3):
+
+
+Average Precision of articulated_truck: 0.8248434
+
+Average Precision of bicycle: 0.84041023
+
+Average Precision of bus: 0.91944456
+
+Average Precision of car: 0.90702224
+
+Average Precision of motorcycle: 0.8958093
+
+Average Precision of motorized_vehicle: 0.54985386
+
+Average Precision of non-motorized_vehicle: 0.41705275
+
+Average Precision of pedestrian: 0.56903344
+
+Average Precision of pickup_truck: 0.86591387
+
+Average Precision of single_unit_truck: 0.6127184
+
+Average Precision of work_van: 0.69611275
+
+Mean Average Precision: 0.73620135
+
+
+
+
+3. Adaptive weights with confidence square (0.16, 0.84, 0.35)
+
+Average Precision of articulated_truck: 0.86176765
+
+Average Precision of bicycle: 0.8375863
+
+Average Precision of bus: 0.95183945
+
+Average Precision of car: 0.92993754
+
+Average Precision of motorcycle: 0.89490646
+
+Average Precision of motorized_vehicle: 0.597569
+
+Average Precision of non-motorized_vehicle: 0.41852343
+
+Average Precision of pedestrian: 0.56826514
+
+Average Precision of pickup_truck: 0.8808618
+
+Average Precision of single_unit_truck: 0.6166905
+
+Average Precision of work_van: 0.69233936
+
+Mean Average Precision: 0.7500261
+
+
+
+
