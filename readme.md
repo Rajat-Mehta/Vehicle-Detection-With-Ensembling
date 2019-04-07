@@ -1,8 +1,10 @@
+# Adaptive Weight based Model Ensembling
+
 This repository consists of a Vehicle Detection model built using Adaptive Weight based Ensembling approach. The ensembling was done using Faster R-CNN and Single Shot Detector models and these models were trained on MIO-TCD dataset which consists of more than 130,000 images of vehicles taken in different lighting and weather conditions. The content of different folders in this repository is explained below.
 
 Folder "Guided_Research_Code" contains all of the scripts used for training and testing the ensemble models. It contains multiple folders which have their own readme.txt files describing each and every script file in that folder along with the commands that are required for running each of those scripts.
 
-Folder descriptions:
+## Folder descriptions:
 1. data_set_files: this folder contains the dataset related files like ground truth for train and validations sets, formatted data according to gluoncv RecordFileDetection Format etc. which can be directly used for training purposes.
 
 2. dataset_scripts: this folder contains scripts for generating files present in "data_set_files" folder.
