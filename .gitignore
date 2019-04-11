@@ -1,0 +1,13 @@
+
+\.idea/misc\.xml
+
+\.idea/modules\.xml
+
+\.idea/vcs\.xml
+
+\.idea/Vehicle-Detection-With-Ensembling\.iml
+
+\.idea/workspace\.xml
+
+data_set_files\train/*
+data_set_files\valid/*
