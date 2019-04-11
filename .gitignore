@@ -9,5 +9,5 @@
 
 \.idea/workspace\.xml
 
-data_set_files\train/*
-data_set_files\valid/*
+data_set_files/train/*
+data_set_files/valid/*
