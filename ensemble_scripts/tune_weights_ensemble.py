@@ -214,22 +214,25 @@ if __name__ == "__main__":
             final_predictions.extend(keep_ensembled_confident(list_ens))
 
         print("Writing ensembled results to csv")
-        with open("./tuning_results/result_ensemble_weight_" + str(i) + ".csv", 'w') as myfile:
+        with open("./tuning_results/result_ensemble_weight_" + str(i).zfill(3) + ".csv", 'w') as myfile:
             wr = csv.writer(myfile)
             wr.writerows(final_predictions)
-        print("Process finished for weight :" + str(i))
+        print("Process finished for weight :" + str(i).zfill(3))
     print("results saved in csv files for all weight combinations.")
 
     path = "./tuning_results"
 
     print("start evaluating mAP for all result files")
     mAP_scores = []
+    j = 0
     for filename in sorted(os.listdir(path)):
         if "result_ensemble_weight" in filename:
             score = subprocess.check_output([sys.executable, '../model_evaluation/localization_evaluation.py',
                                              '../data_set_files/gt_val_0-10k.csv',
                                              '../ensemble_scripts/tuning_results/' + filename])
+            score = str(weights_norm[j][:]) + ", " +score.splitlines(True)[-2]
             mAP_scores.append(score)
+            j+=1
 
     print("write mAP results of all weight combinations to txt file")
 
