@@ -14,3 +14,4 @@ data_set_files/valid/*
 ensemble_scripts/tuning_results/*
 ensemble_scripts/dets_numpy/*
 data_set_files/record_format_files/*
+models_for_ensemble/*
