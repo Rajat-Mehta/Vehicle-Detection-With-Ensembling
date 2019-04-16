@@ -25,7 +25,7 @@ Output:
 DET_PATH_SSD_EXPERT = "./dets_numpy/ssd_expert/"
 DET_PATH_SSD = "./dets_numpy/ssd"
 DET_PATH_FRCNN = "./dets_numpy/frcnn"
-DET_PATH_RETINA = "./dets_numpy/retina"
+DET_PATH_RETINA = "./dets_numpy/retina/"
 DET_PATH_COMBINED = "./dets_numpy/input_ensembles"
 VALID = "../data_set_files/valid.txt"
 VAL_IMAGE_NAMES = "../data_set_files/val_image_names.txt"
@@ -206,7 +206,7 @@ def replace_id_with_name(lst, filter):
     return lst
 
 
-def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, ret_detection):
+def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, ssd_expert, ret_detection):
     """ creating a new list with detections from all models to feed into the model ensemble method """
 
     input_ensemble = []
@@ -214,9 +214,11 @@ def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, ret_detection
         temp = []
         temp_ssd = formatted_op_ssd[item]
         temp_frcnn = formatted_op_frcnn[item]
+        temp_expert = ssd_expert[item]
         temp_ret = ret_detection[item]
         temp.append(temp_ssd)
         temp.append(temp_frcnn)
+        temp.append(temp_expert)
         temp.append(temp_ret)
         input_ensemble.append(temp)
 
@@ -287,15 +289,14 @@ with open ('image_shapes', 'rb') as fp:
 formatted_op_ssd_expert_npy = write_csv_from_npy(DET_PATH_SSD_EXPERT)
 formatted_op_ssd_npy = write_csv_from_npy(DET_PATH_SSD)
 formatted_op_frcnn_npy = write_csv_from_npy(DET_PATH_FRCNN)
-# ret_detection_npy = write_csv_from_npy(DET_PATH_RETINA)
+ret_detection_npy = write_csv_from_npy(DET_PATH_RETINA)
 
-print(len(formatted_op_ssd_npy))
-print(len(formatted_op_frcnn_npy))
-print(len(formatted_op_ssd_expert_npy))
+# print(len(formatted_op_ssd_npy))
+# print(len(formatted_op_frcnn_npy))
+# print(len(formatted_op_ssd_expert_npy))
 # print(len(ret_detection_npy))
-
-input_ensemble_npy = format_list_for_ensemble(formatted_op_ssd_npy, formatted_op_frcnn_npy, formatted_op_ssd_expert_npy)
-
+input_ensemble_npy = format_list_for_ensemble(formatted_op_ssd_npy, formatted_op_frcnn_npy, formatted_op_ssd_expert_npy, ret_detection_npy)
+print(len(input_ensemble_npy))
 np.save('./dets_numpy/input_ensembles/input_ensembles' + BATCH_NO + '.npy', input_ensemble_npy)
 
 # first half of validation set was used for tuning the weight parameters and second half is being used here
@@ -306,7 +307,7 @@ print(len(input_ensemble_npy))
 print("Starting model ensembling")
 final_predictions =[]
 for item in input_ensemble_npy:
-    ens = GeneralEnsemble(item, weights=[0.16, 0.84, 0.35])
+    ens = GeneralEnsemble(item, weights=[0.16, 0.84, 0.35, 0.5])
     list_ens = eval_format_final(np.asarray(ens))
     # list_ens = [[((im_fname.split('/')[-1]).split('.')[0]).lstrip("0")] + x for x in list_ens]
     final_predictions.extend(keep_ensembled_confident(list_ens))
