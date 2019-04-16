@@ -7,6 +7,7 @@ from keras_retinanet.models import load_model
 from keras_retinanet.utils.eval import evaluate
 from keras_retinanet.preprocessing.csv_generator import CSVGenerator
 from keras_retinanet.utils.transform import random_transform_generator
+import keras
 from keras_retinanet import models
 from keras_retinanet.utils.image import read_image_bgr, preprocess_image, resize_image
 from keras_retinanet.utils.colors import label_color
@@ -135,11 +136,6 @@ def slice_frcnn_list(cid, score, bbox, thresh):
             score_new.append(np.asarray([0]))
             bbox_new.append(np.asarray([[0, 0, 0, 0]]))
         i += 1
-        """
-        cid_new.append(c[0:50])
-        score_new.append(s[0:50])
-        bbox_new.append(b[0:50])
-        """
 
     return cid_new, score_new, bbox_new
 
@@ -392,8 +388,11 @@ def get_model_dicts():
     models_gcv['SSD-EXPERT']['model'] = 'ssd_512_resnet50_v1_voc'
     models_gcv['SSD-EXPERT']['weights'] = '../models_for_ensemble/epoch_29_ssd_512_resnet50_v1_voc_mio_tcd.params'
     models_gcv = dict(models_gcv)
+    model_retina_weights = '../models_for_ensemble/retina_weights.70-0.76.hdf5'
+    model_retina = models.load_model(model_retina_weights, backbone_name='resnet50')
+    model_retina = models.convert_model(model_retina)
 
-    return models_gcv
+    return models_gcv, model_retina
 
 
 def read_retina_images(path):
@@ -589,7 +588,7 @@ def get_ssd_coco_detections(net):
 
 
 def non_zero(lst, thresh):
-    """ return indexes of items which are not -1 and value is greater than 0.40 """
+    """ return indexes of items which are not -1 and value is greater than thresh """
 
     return [i for i, e in enumerate(lst) if e > thresh]
 
@@ -614,22 +613,24 @@ def get_frcnn_detections(net):
     return formatted_op_frcnn
 
 
-def get_retina_detections():
+def get_retina_detections(model_retina, processed_images):
     """ Feed data to Retina Net model and get its detections """
 
     ret_detection = []
     j = 0
-    for image in images:
+    for image in processed_images:
         if (j % 20 == 0) and j > 0:
             print("Retina detections: Processed %d images" % j)
-        # image, scale = resize_image(image)
+        image, scale = resize_image(image)
+        if keras.backend.image_data_format() == 'channels_first':
+            image = image.transpose((2, 0, 1))
         boxes, scores, labels = model_retina.predict_on_batch(np.expand_dims(image, axis=0))
-
-        labels, scores, boxes = slice_frcnn_list(labels, scores, boxes, 0.20)
+        boxes /= scale
+        labels, scores, boxes = slice_frcnn_list(labels, scores, boxes, 0.35)
         labels = np.asarray(labels)
         scores = np.asarray(scores)
         boxes = np.asarray(boxes)
-        # boxes /= scale
+
 
         """new = []
         for item in boxes:
@@ -640,7 +641,7 @@ def get_retina_detections():
         ret_detection.append(np.atleast_2d(np.squeeze(format_retina_output(labels, scores, boxes))))
         j += 1
     ret_detection = convert_list_array_to_list_list(ret_detection)
-    np.save('./dets_numpy/ret_detection'+BATCH_NO+'.npy', ret_detection)
+    np.save('./dets_numpy/retina/ret_detection'+BATCH_NO+'.npy', ret_detection)
 
     return ret_detection
 
@@ -660,7 +661,7 @@ def get_class_labels():
     return retina_labels, gluon_labels, filter_classes
 
 
-def add_image_names_to_detections(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert):
+def add_image_names_to_detections(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection):
     """ Adding image names to the detection result lists """
 
     for i in range(0, len(formatted_op_ssd)):
@@ -670,11 +671,12 @@ def add_image_names_to_detections(formatted_op_ssd, formatted_op_frcnn, formatte
         [j.insert(len(j), name.strip()) for j in formatted_op_ssd[i]]
         [j.insert(len(j), name.strip()) for j in formatted_op_frcnn[i]]
         [j.insert(len(j), name.strip()) for j in formatted_op_ssd_expert[i]]
+        [j.insert(len(j), name.strip()) for j in ret_detection[i]]
 
-    return formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert
+    return formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection
 
 
-def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert):
+def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection):
     """ creating a new list with detections from all models to feed into the model ensemble method """
 
     input_ensemble = []
@@ -683,9 +685,11 @@ def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, formatted_op_
         temp_ssd = formatted_op_ssd[item]
         temp_frcnn = formatted_op_frcnn[item]
         temp_expert = formatted_op_ssd_expert[item]
+        temp_retina = ret_detection[item]
         temp.append(temp_ssd)
         temp.append(temp_frcnn)
         temp.append(temp_expert)
+        temp.append(temp_retina)
         input_ensemble.append(temp)
 
     return input_ensemble
@@ -723,11 +727,11 @@ def rescale_detections(ssd, shapes):
 if __name__ == "__main__":
 
     print("Start of prediction and ensemble process.")
-    images, image_names = read_retina_images(VAL_PATH)
+    processed_images, image_names = read_retina_images(VAL_PATH)
     retina_labels_to_names, classes, filter_classes = get_class_labels()
 
     # get models
-    models_gcv = get_model_dicts()
+    models_gcv, model_retina = get_model_dicts()
 
     # getting detections from SSD,SSD-Subset and FRCNN
     for dicts in models_gcv.items():
@@ -758,30 +762,29 @@ if __name__ == "__main__":
     """
     Uncomment the code lines inside "read_retina_images" function before enabling retina net 
     """
-    # print("Started detections for Retina Net")
-    # ret_detection = get_retina_detections()
-    # print("Finished retina detections")
-    # print(len(ret_detection))
-
-    # ret_detection=[]
+    print("Started detections for Retina Net")
+    ret_detection = get_retina_detections(model_retina, processed_images)
+    print("Finished retina detections")
+    # retina=[]
 
     print(len(formatted_op_ssd))
     print(len(formatted_op_frcnn))
     print(len(formatted_op_ssd_expert))
+    print(len(ret_detection))
 
-    # print(len(ret_detection))
+    # print(len(retina))
     print("Adding image names to the result list")
-    formatted_op_ssd, formatted_op_frcnn, ret_detection = add_image_names_to_detections(
-        formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert)
+    formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection = add_image_names_to_detections(
+        formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection)
 
     print("Replacing integer class ids with class names")
     formatted_op_ssd = replace_id_with_name(formatted_op_ssd, False)
     formatted_op_frcnn = replace_id_with_name(formatted_op_frcnn, False)
     formatted_op_ssd_expert = replace_id_with_name(formatted_op_ssd_expert, False)
-    # ret_detection = replace_id_with_name(ret_detection)
+    retina = replace_id_with_name(ret_detection)
 
     print("Formatting list to feed into the model ensemble method")
-    input_ensemble = format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert)
+    input_ensemble = format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection)
 
     with open('./dets_numpy/input_ensemble'+BATCH_NO + '.npy', 'wb') as f:
         pickle.dump(input_ensemble, f)
