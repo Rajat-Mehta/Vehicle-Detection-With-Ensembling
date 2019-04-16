@@ -38,7 +38,7 @@ VAL_PATH = "../data_set_files/valid_mini.txt"
 val_dataset = gcv.data.RecordFileDetection('../data_set_files/record_format_files/data-set_min/val.rec',
                                            coord_normalized=True)
 BATCH_SIZE = 1
-BATCH_NO = '_0-1500'
+BATCH_NO = '_0-269'
 
 
 def get_ssd_data_loader(val_dataset):
