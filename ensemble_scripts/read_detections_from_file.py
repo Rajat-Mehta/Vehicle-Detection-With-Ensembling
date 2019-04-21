@@ -212,11 +212,11 @@ def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, ssd_expert, r
     input_ensemble = []
     for item in range(0, len(formatted_op_ssd)):
         temp = []
-        temp_ssd = formatted_op_ssd[item]
+        #temp_ssd = formatted_op_ssd[item]
         temp_frcnn = formatted_op_frcnn[item]
         temp_expert = ssd_expert[item]
         temp_ret = ret_detection[item]
-        temp.append(temp_ssd)
+        #temp.append(temp_ssd)
         temp.append(temp_frcnn)
         temp.append(temp_expert)
         temp.append(temp_ret)

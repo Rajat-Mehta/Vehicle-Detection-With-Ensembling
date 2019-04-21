@@ -3,6 +3,7 @@ import csv
 import numpy as np
 import sys
 import subprocess
+import ternary
 
 """
 Tuning the ensembling model on different weight value combinations for each participating model
@@ -177,10 +178,21 @@ def keep_ensembled_confident(det):
     return conf
 
 
+def generate_weights_data_new(scale=20):
+    d = dict()
+    from ternary.helpers import simplex_iterator
+    temp =[]
+    for (i, j, k) in simplex_iterator(scale):
+        temp.append([float(i), float(j), float(k)])
+
+    return temp
+
 if __name__ == "__main__":
     dets = np.load('./dets_numpy/input_ensembles/input_ensembles_0-20000_sfe.npy')
 
     dets = dets[0:len(dets)/2]
+
+    data = generate_weights_data_new()
 
     # Toy example
     wt = np.arange(0, 1, 0.07)
@@ -202,8 +214,21 @@ if __name__ == "__main__":
                 weight.append(a)
                 weights_norm.append(weight)
 
+    weights_norm = []
+    weights_norm = data
+    print(len(weights_norm))
     for i in range(len(weights_norm)):
         final_predictions = []
+
+        if np.count_nonzero(weights_norm[i]) <= 2:
+            final_predictions.append(['0', 'car', '0.0', '0.0', '0.0', '0.0', '0.0'])
+            print(final_predictions)
+            print("Writing ensembled results to csv")
+            with open("./tuning_results/result_ensemble_weight_" + str(i).zfill(3) + ".csv", 'w') as myfile:
+                wr = csv.writer(myfile)
+                wr.writerows(final_predictions)
+            print("Process finished for weight :" + str(i).zfill(3))
+            continue
         print("started ensembling for weights : %d" % i)
         for item in dets:
             ens = GeneralEnsemble(item, weights=weights_norm[i])

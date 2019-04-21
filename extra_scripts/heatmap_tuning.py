@@ -5,7 +5,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import ternary
-
+from matplotlib import cm
 
 
 file_obj = open("../ensemble_scripts/tuning_results/mAP_tuned_weights.txt", "r")
@@ -36,15 +36,10 @@ def color_point(x, y, z, scale):
     return (r, g, b, 1.)
 
 
-def color_point_new(x, y, z, m):
-    w = 255
-    print(x,y,z)
-    m_color = float(m) * w/255
-    r = math.fabs(w - m_color) / w
-    g=0
-    b=0
-    print(m_color)
-    return (m_color, g, b, 1.)
+def color_point_new(acc):
+    hot = cm.get_cmap('hot', 12)
+    rgba = hot(acc)
+    return (rgba)
 
 
 def generate_heatmap_data(scale=5):
@@ -52,21 +47,24 @@ def generate_heatmap_data(scale=5):
     d = dict()
     for (i, j, k) in simplex_iterator(scale):
         d[(i, j, k)] = color_point(i, j, k, scale)
-        print(color_point(i, j, k, scale))
-        exit()
     return d
 
-def generate_heatmap_data_new(scale=5):
+def generate_heatmap_data_new(scale=10):
     d = dict()
-    for i in range(len(X)):
-        total = X[i] + Y[i] + Z[i]
-        x_norm = X[i] / total
-        y_norm = Y[i] / total
-        z_norm = Z[i] / total
-        d[(X[i], Y[i], Z[i])] = color_point_new(x_norm, y_norm, z_norm, M[i])
+    acc = [] #read mAP values for all simplex_iterator values generated in tune_weights file
+    from ternary.helpers import simplex_iterator
+    temp = []
+    for (i, j, k) in simplex_iterator(scale):
+        temp.append((i,j,k))
+    i = 0
+    for item in temp:
+        d[temp] = color_point_new(acc[i])
+
     return d
 
-scale = 1
+
+
+scale = 20
 data = generate_heatmap_data_new(scale)
 figure, tax = ternary.figure(scale=scale)
 tax.heatmap(data, style="hexagonal", use_rgba=True, colorbar=False)
@@ -77,13 +75,16 @@ tax.boundary()
 tax.set_title("RGBA Heatmap")
 plt.show()
 exit()
-
-print(len(X), len(Y), len(Z), len(M))
-
-
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
 
-ax.scatter(X, Y, Z, c=M, cmap=plt.hot())
+ax.scatter(X, Y, Z, c=M, cmap=plt.cool())
 plt.show()
+
+
+
+
+exit()
+print(len(X), len(Y), len(Z), len(M))
+
