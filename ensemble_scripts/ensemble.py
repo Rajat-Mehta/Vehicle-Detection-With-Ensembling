@@ -14,7 +14,7 @@ Parts of this script are referred from https://github.com/ahrnbom/ensemble-objde
 """
 
 
-def GeneralEnsemble(dets, iou_thresh=0.5, weights=None):
+def GeneralEnsemble(dets, iou_thresh=0.5, weights=None, adaptive=True):
     """ performs ensemble of multiple models """
 
     assert(type(iou_thresh) == float)
@@ -70,7 +70,10 @@ def GeneralEnsemble(dets, iou_thresh=0.5, weights=None):
                     new_box[5] /= ndets
                 out.append(new_box)
             else:
-                allboxes = [(box, weights[idet] * box[5] * box[5])]
+                if adaptive:
+                    allboxes = [(box, weights[idet] * box[5] * box[5])]  # adaptive weights
+                else:
+                    allboxes = [(box, weights[idet])]
                 allboxes.extend(found)
                 allboxes = normalize_weights(allboxes)
                 xc = 0.0
@@ -101,7 +104,6 @@ def GeneralEnsemble(dets, iou_thresh=0.5, weights=None):
 
 def normalize_weights(allboxes):
     """ normalize weights to make their sum equal to one """
-
     wt_total = 0.0
     for item in allboxes:
         wt_total += item[1]

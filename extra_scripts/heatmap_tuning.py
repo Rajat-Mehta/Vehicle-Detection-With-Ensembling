@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import ternary
 from matplotlib import cm
 
+TYPE_OF_WEIGHTS = '/simple_weights'
 
 def color_point(x, y, z, scale):
     w = 255
@@ -54,7 +55,20 @@ def read_data_from_file(file_obj):
             Z.append(float(w[2].strip()))
 
 
-file_obj = open("../ensemble_scripts/tuning_results/mAP_tuned_weights.txt", "r")
+def normalize_accuracy(acc):
+    acc_n = []
+    for item in acc:
+        acc_n.append(float(item))
+
+    min = np.amin(np.array(acc_n))
+    max = np.amax(np.array(acc_n))
+
+    acc_n = (np.array(acc_n) - min) / (max - min)
+
+    return acc_n
+
+
+file_obj = open("../ensemble_scripts/tuning_results" + TYPE_OF_WEIGHTS + "/mAP_tuned_weights.txt", "r")
 
 X=[]
 Y=[]
@@ -64,18 +78,29 @@ M=[]
 
 read_data_from_file(file_obj)
 
-fontsize = 12
+accuracy = normalize_accuracy(M)
+title_size = 18
+fontsize = 10
 scale = 20
+offset = 0.13
+
+cb_kwargs = {"shrink": 0.75,
+             "orientation": "vertical",
+             "label": "Accuracy",
+             }
+
 data = generate_heatmap_data_new(scale)
 figure, tax = ternary.figure(scale=scale)
-tax.heatmap(data, style="triangular", use_rgba=True, colorbar=True, cmap=cm.get_cmap('jet'))
+tax.heatmap(data, style="triangular", use_rgba=True, colorbar=True, cmap=cm.get_cmap('jet'),
+            cb_kwargs=cb_kwargs)
 # Remove default Matplotlib Axes
 tax.clear_matplotlib_ticks()
 tax.get_axes().axis('off')
 tax.boundary()
-tax.set_title("Accuracy heatmap")
-tax.left_axis_label("Faster R-CNN", fontsize=fontsize)
-tax.right_axis_label("RetinaNet", fontsize=fontsize)
-tax.bottom_axis_label("SSD", fontsize=fontsize)
+tax.set_title("Accuracy heatmap", fontsize=title_size)
+
+tax.right_corner_label("Faster R-CNN", fontsize=fontsize, offset=0.10)
+tax.left_corner_label("RetinaNet", fontsize=fontsize, offset=0.10)
+tax.top_corner_label("SSD", fontsize=fontsize, offset=offset)
 
 plt.show()

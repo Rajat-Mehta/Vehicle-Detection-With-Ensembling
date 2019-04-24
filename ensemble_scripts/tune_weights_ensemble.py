@@ -17,7 +17,10 @@ Parts of this script are referred from https://github.com/ahrnbom/ensemble-objde
 """
 
 
-def GeneralEnsemble(dets, iou_thresh=0.5, weights=None):
+TYPE_OF_WEIGHTS = '/simple_weights'
+
+
+def GeneralEnsemble(dets, iou_thresh=0.5, weights=None, adaptive=True):
     """ performs ensemble of multiple models """
 
     assert(type(iou_thresh) == float)
@@ -73,7 +76,12 @@ def GeneralEnsemble(dets, iou_thresh=0.5, weights=None):
                     new_box[5] /= ndets
                 out.append(new_box)
             else:
-                allboxes = [(box, weights[idet] * box[5] * box[5])]
+                if adaptive:
+                    allboxes = [(box, weights[idet] * box[5] * box[5])]     # adaptive weights logic
+                else:
+                    allboxes = [(box, weights[idet])]     # non-adaptive weights logic
+
+
                 allboxes.extend(found)
                 allboxes = normalize_weights(allboxes)
                 xc = 0.0
@@ -288,13 +296,13 @@ if __name__ == "__main__":
             final_predictions.extend(keep_ensembled_confident(list_ens))
 
         print("Writing ensembled results to csv")
-        with open("./tuning_results/result_ensemble_weight_" + str(i).zfill(3) + ".csv", 'w') as myfile:
+        with open("./tuning_results" + TYPE_OF_WEIGHTS + "/result_ensemble_weight_" + str(i).zfill(3) + ".csv", 'w') as myfile:
             wr = csv.writer(myfile)
             wr.writerows(final_predictions)
         print("Process finished for weight :" + str(i).zfill(3))
     print("results saved in csv files for all weight combinations.")
     
-    path = "./tuning_results"
+    path = "./tuning_results" + TYPE_OF_WEIGHTS + "/"
 
     print("start evaluating mAP for all result files")
     mAP_scores = []
@@ -304,7 +312,7 @@ if __name__ == "__main__":
         if "result_ensemble_weight" in filename:
             score = subprocess.check_output([sys.executable, '../model_evaluation/localization_evaluation.py',
                                              '../data_set_files/gt_val_0-10k.csv',
-                                             '../ensemble_scripts/tuning_results/' + filename])
+                                             '../ensemble_scripts/tuning_results' + TYPE_OF_WEIGHTS + '/' + filename])
             score = str(weights_norm[j][:]) + ", " +score.splitlines(True)[-2]
             print(score)
             mAP_scores.append(score)
@@ -312,6 +320,6 @@ if __name__ == "__main__":
 
     print("write mAP results of all weight combinations to txt file")
 
-    with open("./tuning_results/mAP_tuned_weights.txt", 'w') as f:
+    with open("./tuning_results" + TYPE_OF_WEIGHTS + "/mAP_tuned_weights.txt", 'w') as f:
         for item in mAP_scores:
             f.write("%s\n" % item)
