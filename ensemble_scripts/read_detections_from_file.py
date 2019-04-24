@@ -307,7 +307,7 @@ print(len(input_ensemble_npy))
 print("Starting model ensembling")
 final_predictions =[]
 for item in input_ensemble_npy:
-    ens = GeneralEnsemble(item, weights=[0.16, 0.84, 0.35, 0.5])
+    ens = GeneralEnsemble(item, weights=[0.85, 0.05, 0.1])
     list_ens = eval_format_final(np.asarray(ens))
     # list_ens = [[((im_fname.split('/')[-1]).split('.')[0]).lstrip("0")] + x for x in list_ens]
     final_predictions.extend(keep_ensembled_confident(list_ens))

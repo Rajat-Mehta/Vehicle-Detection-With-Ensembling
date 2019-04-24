@@ -1,0 +1,462 @@
+[0.0, 0.0, 20.0], Mean Average Precision: 0.0
+
+[0.0, 1.0, 19.0], Mean Average Precision: 0.0
+
+[0.0, 2.0, 18.0], Mean Average Precision: 0.0
+
+[0.0, 3.0, 17.0], Mean Average Precision: 0.0
+
+[0.0, 4.0, 16.0], Mean Average Precision: 0.0
+
+[0.0, 5.0, 15.0], Mean Average Precision: 0.0
+
+[0.0, 6.0, 14.0], Mean Average Precision: 0.0
+
+[0.0, 7.0, 13.0], Mean Average Precision: 0.0
+
+[0.0, 8.0, 12.0], Mean Average Precision: 0.0
+
+[0.0, 9.0, 11.0], Mean Average Precision: 0.0
+
+[0.0, 10.0, 10.0], Mean Average Precision: 0.0
+
+[0.0, 11.0, 9.0], Mean Average Precision: 0.0
+
+[0.0, 12.0, 8.0], Mean Average Precision: 0.0
+
+[0.0, 13.0, 7.0], Mean Average Precision: 0.0
+
+[0.0, 14.0, 6.0], Mean Average Precision: 0.0
+
+[0.0, 15.0, 5.0], Mean Average Precision: 0.0
+
+[0.0, 16.0, 4.0], Mean Average Precision: 0.0
+
+[0.0, 17.0, 3.0], Mean Average Precision: 0.0
+
+[0.0, 18.0, 2.0], Mean Average Precision: 0.0
+
+[0.0, 19.0, 1.0], Mean Average Precision: 0.0
+
+[0.0, 20.0, 0.0], Mean Average Precision: 0.0
+
+[1.0, 0.0, 19.0], Mean Average Precision: 0.0
+
+[1.0, 1.0, 18.0], Mean Average Precision: 0.73683125
+
+[1.0, 2.0, 17.0], Mean Average Precision: 0.73880076
+
+[1.0, 3.0, 16.0], Mean Average Precision: 0.73845935
+
+[1.0, 4.0, 15.0], Mean Average Precision: 0.73910177
+
+[1.0, 5.0, 14.0], Mean Average Precision: 0.7398088
+
+[1.0, 6.0, 13.0], Mean Average Precision: 0.7390194
+
+[1.0, 7.0, 12.0], Mean Average Precision: 0.73905945
+
+[1.0, 8.0, 11.0], Mean Average Precision: 0.7387823
+
+[1.0, 9.0, 10.0], Mean Average Precision: 0.73613334
+
+[1.0, 10.0, 9.0], Mean Average Precision: 0.7351669
+
+[1.0, 11.0, 8.0], Mean Average Precision: 0.7347751
+
+[1.0, 12.0, 7.0], Mean Average Precision: 0.73449725
+
+[1.0, 13.0, 6.0], Mean Average Precision: 0.7357487
+
+[1.0, 14.0, 5.0], Mean Average Precision: 0.73647285
+
+[1.0, 15.0, 4.0], Mean Average Precision: 0.7369203
+
+[1.0, 16.0, 3.0], Mean Average Precision: 0.73777354
+
+[1.0, 17.0, 2.0], Mean Average Precision: 0.7385021
+
+[1.0, 18.0, 1.0], Mean Average Precision: 0.7400582
+
+[1.0, 19.0, 0.0], Mean Average Precision: 0.0
+
+[2.0, 0.0, 18.0], Mean Average Precision: 0.0
+
+[2.0, 1.0, 17.0], Mean Average Precision: 0.73726314
+
+[2.0, 2.0, 16.0], Mean Average Precision: 0.7396433
+
+[2.0, 3.0, 15.0], Mean Average Precision: 0.7407369
+
+[2.0, 4.0, 14.0], Mean Average Precision: 0.74158174
+
+[2.0, 5.0, 13.0], Mean Average Precision: 0.7421264
+
+[2.0, 6.0, 12.0], Mean Average Precision: 0.7414152
+
+[2.0, 7.0, 11.0], Mean Average Precision: 0.7410683
+
+[2.0, 8.0, 10.0], Mean Average Precision: 0.7397436
+
+[2.0, 9.0, 9.0], Mean Average Precision: 0.7382769
+
+[2.0, 10.0, 8.0], Mean Average Precision: 0.7377178
+
+[2.0, 11.0, 7.0], Mean Average Precision: 0.73771757
+
+[2.0, 12.0, 6.0], Mean Average Precision: 0.737858
+
+[2.0, 13.0, 5.0], Mean Average Precision: 0.73795897
+
+[2.0, 14.0, 4.0], Mean Average Precision: 0.7397545
+
+[2.0, 15.0, 3.0], Mean Average Precision: 0.74063283
+
+[2.0, 16.0, 2.0], Mean Average Precision: 0.7412878
+
+[2.0, 17.0, 1.0], Mean Average Precision: 0.74199027
+
+[2.0, 18.0, 0.0], Mean Average Precision: 0.0
+
+[3.0, 0.0, 17.0], Mean Average Precision: 0.0
+
+[3.0, 1.0, 16.0], Mean Average Precision: 0.73835367
+
+[3.0, 2.0, 15.0], Mean Average Precision: 0.7413223
+
+[3.0, 3.0, 14.0], Mean Average Precision: 0.74272424
+
+[3.0, 4.0, 13.0], Mean Average Precision: 0.743808
+
+[3.0, 5.0, 12.0], Mean Average Precision: 0.7438039
+
+[3.0, 6.0, 11.0], Mean Average Precision: 0.7433719
+
+[3.0, 7.0, 10.0], Mean Average Precision: 0.74274695
+
+[3.0, 8.0, 9.0], Mean Average Precision: 0.7409622
+
+[3.0, 9.0, 8.0], Mean Average Precision: 0.74015653
+
+[3.0, 10.0, 7.0], Mean Average Precision: 0.7398891
+
+[3.0, 11.0, 6.0], Mean Average Precision: 0.7400642
+
+[3.0, 12.0, 5.0], Mean Average Precision: 0.74103904
+
+[3.0, 13.0, 4.0], Mean Average Precision: 0.74197954
+
+[3.0, 14.0, 3.0], Mean Average Precision: 0.743099
+
+[3.0, 15.0, 2.0], Mean Average Precision: 0.74320436
+
+[3.0, 16.0, 1.0], Mean Average Precision: 0.74437314
+
+[3.0, 17.0, 0.0], Mean Average Precision: 0.0
+
+[4.0, 0.0, 16.0], Mean Average Precision: 0.0
+
+[4.0, 1.0, 15.0], Mean Average Precision: 0.739862
+
+[4.0, 2.0, 14.0], Mean Average Precision: 0.74260557
+
+[4.0, 3.0, 13.0], Mean Average Precision: 0.7441727
+
+[4.0, 4.0, 12.0], Mean Average Precision: 0.7452845
+
+[4.0, 5.0, 11.0], Mean Average Precision: 0.745658
+
+[4.0, 6.0, 10.0], Mean Average Precision: 0.74445367
+
+[4.0, 7.0, 9.0], Mean Average Precision: 0.74439013
+
+[4.0, 8.0, 8.0], Mean Average Precision: 0.7432284
+
+[4.0, 9.0, 7.0], Mean Average Precision: 0.74266046
+
+[4.0, 10.0, 6.0], Mean Average Precision: 0.7426447
+
+[4.0, 11.0, 5.0], Mean Average Precision: 0.7426072
+
+[4.0, 12.0, 4.0], Mean Average Precision: 0.7442829
+
+[4.0, 13.0, 3.0], Mean Average Precision: 0.74510807
+
+[4.0, 14.0, 2.0], Mean Average Precision: 0.744945
+
+[4.0, 15.0, 1.0], Mean Average Precision: 0.745825
+
+[4.0, 16.0, 0.0], Mean Average Precision: 0.0
+
+[5.0, 0.0, 15.0], Mean Average Precision: 0.0
+
+[5.0, 1.0, 14.0], Mean Average Precision: 0.7418432
+
+[5.0, 2.0, 13.0], Mean Average Precision: 0.7441876
+
+[5.0, 3.0, 12.0], Mean Average Precision: 0.7451732
+
+[5.0, 4.0, 11.0], Mean Average Precision: 0.74665165
+
+[5.0, 5.0, 10.0], Mean Average Precision: 0.7465109
+
+[5.0, 6.0, 9.0], Mean Average Precision: 0.7463124
+
+[5.0, 7.0, 8.0], Mean Average Precision: 0.7463009
+
+[5.0, 8.0, 7.0], Mean Average Precision: 0.7453453
+
+[5.0, 9.0, 6.0], Mean Average Precision: 0.7447168
+
+[5.0, 10.0, 5.0], Mean Average Precision: 0.74515414
+
+[5.0, 11.0, 4.0], Mean Average Precision: 0.74541074
+
+[5.0, 12.0, 3.0], Mean Average Precision: 0.7472746
+
+[5.0, 13.0, 2.0], Mean Average Precision: 0.74778897
+
+[5.0, 14.0, 1.0], Mean Average Precision: 0.7477448
+
+[5.0, 15.0, 0.0], Mean Average Precision: 0.0
+
+[6.0, 0.0, 14.0], Mean Average Precision: 0.0
+
+[6.0, 1.0, 13.0], Mean Average Precision: 0.7438921
+
+[6.0, 2.0, 12.0], Mean Average Precision: 0.74560416
+
+[6.0, 3.0, 11.0], Mean Average Precision: 0.7468572
+
+[6.0, 4.0, 10.0], Mean Average Precision: 0.7476354
+
+[6.0, 5.0, 9.0], Mean Average Precision: 0.74785894
+
+[6.0, 6.0, 8.0], Mean Average Precision: 0.74796927
+
+[6.0, 7.0, 7.0], Mean Average Precision: 0.7475717
+
+[6.0, 8.0, 6.0], Mean Average Precision: 0.7465986
+
+[6.0, 9.0, 5.0], Mean Average Precision: 0.7468643
+
+[6.0, 10.0, 4.0], Mean Average Precision: 0.7469845
+
+[6.0, 11.0, 3.0], Mean Average Precision: 0.7481197
+
+[6.0, 12.0, 2.0], Mean Average Precision: 0.7494812
+
+[6.0, 13.0, 1.0], Mean Average Precision: 0.74888015
+
+[6.0, 14.0, 0.0], Mean Average Precision: 0.0
+
+[7.0, 0.0, 13.0], Mean Average Precision: 0.0
+
+[7.0, 1.0, 12.0], Mean Average Precision: 0.7460877
+
+[7.0, 2.0, 11.0], Mean Average Precision: 0.74732727
+
+[7.0, 3.0, 10.0], Mean Average Precision: 0.7485138
+
+[7.0, 4.0, 9.0], Mean Average Precision: 0.74916416
+
+[7.0, 5.0, 8.0], Mean Average Precision: 0.7490713
+
+[7.0, 6.0, 7.0], Mean Average Precision: 0.74911636
+
+[7.0, 7.0, 6.0], Mean Average Precision: 0.74904025
+
+[7.0, 8.0, 5.0], Mean Average Precision: 0.7481585
+
+[7.0, 9.0, 4.0], Mean Average Precision: 0.74837184
+
+[7.0, 10.0, 3.0], Mean Average Precision: 0.7502001
+
+[7.0, 11.0, 2.0], Mean Average Precision: 0.75002867
+
+[7.0, 12.0, 1.0], Mean Average Precision: 0.7498254
+
+[7.0, 13.0, 0.0], Mean Average Precision: 0.0
+
+[8.0, 0.0, 12.0], Mean Average Precision: 0.0
+
+[8.0, 1.0, 11.0], Mean Average Precision: 0.74684566
+
+[8.0, 2.0, 10.0], Mean Average Precision: 0.7480934
+
+[8.0, 3.0, 9.0], Mean Average Precision: 0.7499355
+
+[8.0, 4.0, 8.0], Mean Average Precision: 0.7505728
+
+[8.0, 5.0, 7.0], Mean Average Precision: 0.7507815
+
+[8.0, 6.0, 6.0], Mean Average Precision: 0.75052446
+
+[8.0, 7.0, 5.0], Mean Average Precision: 0.750614
+
+[8.0, 8.0, 4.0], Mean Average Precision: 0.7501479
+
+[8.0, 9.0, 3.0], Mean Average Precision: 0.7506409
+
+[8.0, 10.0, 2.0], Mean Average Precision: 0.639691
+
+[8.0, 11.0, 1.0], Mean Average Precision: 0.7510698
+
+[8.0, 12.0, 0.0], Mean Average Precision: 0.0
+
+[9.0, 0.0, 11.0], Mean Average Precision: 0.0
+
+[9.0, 1.0, 10.0], Mean Average Precision: 0.74800706
+
+[9.0, 2.0, 9.0], Mean Average Precision: 0.7493656
+
+[9.0, 3.0, 8.0], Mean Average Precision: 0.7504442
+
+[9.0, 4.0, 7.0], Mean Average Precision: 0.7514511
+
+[9.0, 5.0, 6.0], Mean Average Precision: 0.75137866
+
+[9.0, 6.0, 5.0], Mean Average Precision: 0.75164753
+
+[9.0, 7.0, 4.0], Mean Average Precision: 0.75220567
+
+[9.0, 8.0, 3.0], Mean Average Precision: 0.7526488
+
+[9.0, 9.0, 2.0], Mean Average Precision: 0.75298285
+
+[9.0, 10.0, 1.0], Mean Average Precision: 0.7520058
+
+[9.0, 11.0, 0.0], Mean Average Precision: 0.0
+
+[10.0, 0.0, 10.0], Mean Average Precision: 0.0
+
+[10.0, 1.0, 9.0], Mean Average Precision: 0.74925095
+
+[10.0, 2.0, 8.0], Mean Average Precision: 0.7502325
+
+[10.0, 3.0, 7.0], Mean Average Precision: 0.75163114
+
+[10.0, 4.0, 6.0], Mean Average Precision: 0.75304466
+
+[10.0, 5.0, 5.0], Mean Average Precision: 0.7517656
+
+[10.0, 6.0, 4.0], Mean Average Precision: 0.75289625
+
+[10.0, 7.0, 3.0], Mean Average Precision: 0.75314593
+
+[10.0, 8.0, 2.0], Mean Average Precision: 0.753656
+
+[10.0, 9.0, 1.0], Mean Average Precision: 0.7535214
+
+[10.0, 10.0, 0.0], Mean Average Precision: 0.0
+
+[11.0, 0.0, 9.0], Mean Average Precision: 0.0
+
+[11.0, 1.0, 8.0], Mean Average Precision: 0.7501622
+
+[11.0, 2.0, 7.0], Mean Average Precision: 0.75151724
+
+[11.0, 3.0, 6.0], Mean Average Precision: 0.7529945
+
+[11.0, 4.0, 5.0], Mean Average Precision: 0.7537086
+
+[11.0, 5.0, 4.0], Mean Average Precision: 0.75370216
+
+[11.0, 6.0, 3.0], Mean Average Precision: 0.75464654
+
+[11.0, 7.0, 2.0], Mean Average Precision: 0.75433636
+
+[11.0, 8.0, 1.0], Mean Average Precision: 0.7539371
+
+[11.0, 9.0, 0.0], Mean Average Precision: 0.0
+
+[12.0, 0.0, 8.0], Mean Average Precision: 0.0
+
+[12.0, 1.0, 7.0], Mean Average Precision: 0.75173205
+
+[12.0, 2.0, 6.0], Mean Average Precision: 0.7530392
+
+[12.0, 3.0, 5.0], Mean Average Precision: 0.7545635
+
+[12.0, 4.0, 4.0], Mean Average Precision: 0.7543806
+
+[12.0, 5.0, 3.0], Mean Average Precision: 0.75489557
+
+[12.0, 6.0, 2.0], Mean Average Precision: 0.75572306
+
+[12.0, 7.0, 1.0], Mean Average Precision: 0.7547929
+
+[12.0, 8.0, 0.0], Mean Average Precision: 0.0
+
+[13.0, 0.0, 7.0], Mean Average Precision: 0.0
+
+[13.0, 1.0, 6.0], Mean Average Precision: 0.75330335
+
+[13.0, 2.0, 5.0], Mean Average Precision: 0.75476843
+
+[13.0, 3.0, 4.0], Mean Average Precision: 0.7560823
+
+[13.0, 4.0, 3.0], Mean Average Precision: 0.7560777
+
+[13.0, 5.0, 2.0], Mean Average Precision: 0.75584376
+
+[13.0, 6.0, 1.0], Mean Average Precision: 0.7563183
+
+[13.0, 7.0, 0.0], Mean Average Precision: 0.0
+
+[14.0, 0.0, 6.0], Mean Average Precision: 0.0
+
+[14.0, 1.0, 5.0], Mean Average Precision: 0.7547337
+
+[14.0, 2.0, 4.0], Mean Average Precision: 0.7564672
+
+[14.0, 3.0, 3.0], Mean Average Precision: 0.7571335
+
+[14.0, 4.0, 2.0], Mean Average Precision: 0.75717264
+
+[14.0, 5.0, 1.0], Mean Average Precision: 0.7568562
+
+[14.0, 6.0, 0.0], Mean Average Precision: 0.0
+
+[15.0, 0.0, 5.0], Mean Average Precision: 0.0
+
+[15.0, 1.0, 4.0], Mean Average Precision: 0.7572445
+
+[15.0, 2.0, 3.0], Mean Average Precision: 0.75819355
+
+[15.0, 3.0, 2.0], Mean Average Precision: 0.75825125
+
+[15.0, 4.0, 1.0], Mean Average Precision: 0.7586984
+
+[15.0, 5.0, 0.0], Mean Average Precision: 0.0
+
+[16.0, 0.0, 4.0], Mean Average Precision: 0.0
+
+[16.0, 1.0, 3.0], Mean Average Precision: 0.75950605
+
+[16.0, 2.0, 2.0], Mean Average Precision: 0.7599432
+
+[16.0, 3.0, 1.0], Mean Average Precision: 0.76028436
+
+[16.0, 4.0, 0.0], Mean Average Precision: 0.0
+
+[17.0, 0.0, 3.0], Mean Average Precision: 0.0
+
+[17.0, 1.0, 2.0], Mean Average Precision: 0.76171803
+
+[17.0, 2.0, 1.0], Mean Average Precision: 0.7601769
+
+[17.0, 3.0, 0.0], Mean Average Precision: 0.0
+
+[18.0, 0.0, 2.0], Mean Average Precision: 0.0
+
+[18.0, 1.0, 1.0], Mean Average Precision: 0.7603542
+
+[18.0, 2.0, 0.0], Mean Average Precision: 0.0
+
+[19.0, 0.0, 1.0], Mean Average Precision: 0.0
+
+[19.0, 1.0, 0.0], Mean Average Precision: 0.0
+
+[20.0, 0.0, 0.0], Mean Average Precision: 0.0
+

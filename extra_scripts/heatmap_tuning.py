@@ -37,7 +37,7 @@ def color_point(x, y, z, scale):
 
 
 def color_point_new(acc):
-    hot = cm.get_cmap('hot', 12)
+    hot = cm.get_cmap('jet', 12)
     rgba = hot(acc)
     return (rgba)
 
@@ -49,42 +49,34 @@ def generate_heatmap_data(scale=5):
         d[(i, j, k)] = color_point(i, j, k, scale)
     return d
 
-def generate_heatmap_data_new(scale=10):
+def generate_heatmap_data_new(scale=20):
     d = dict()
-    acc = [] #read mAP values for all simplex_iterator values generated in tune_weights file
+    acc = M #read mAP values for all simplex_iterator values generated in tune_weights file
     from ternary.helpers import simplex_iterator
-    temp = []
+    a=0
     for (i, j, k) in simplex_iterator(scale):
-        temp.append((i,j,k))
-    i = 0
-    for item in temp:
-        d[temp] = color_point_new(acc[i])
-
+        d[(i, j, k)] = color_point_new(float(acc[a]))
+        a+=1
     return d
-
 
 
 scale = 20
 data = generate_heatmap_data_new(scale)
+print(data)
 figure, tax = ternary.figure(scale=scale)
-tax.heatmap(data, style="hexagonal", use_rgba=True, colorbar=False)
+tax.heatmap(data, style="triangular", use_rgba=True, colorbar=True, cmap=cm.get_cmap('jet'))
 # Remove default Matplotlib Axes
 tax.clear_matplotlib_ticks()
 tax.get_axes().axis('off')
 tax.boundary()
-tax.set_title("RGBA Heatmap")
+tax.set_title("Accuracy heatmap")
 plt.show()
 exit()
+
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
 
 ax.scatter(X, Y, Z, c=M, cmap=plt.cool())
 plt.show()
-
-
-
-
-exit()
-print(len(X), len(Y), len(Z), len(M))
 

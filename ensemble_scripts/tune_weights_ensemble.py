@@ -187,6 +187,7 @@ def generate_weights_data_new(scale=20):
 
     return temp
 
+
 if __name__ == "__main__":
     dets = np.load('./dets_numpy/input_ensembles/input_ensembles_0-20000_sfe.npy')
 
@@ -194,6 +195,7 @@ if __name__ == "__main__":
 
     data = generate_weights_data_new()
 
+    """
     # Toy example
     wt = np.arange(0, 1, 0.07)
     wt1 = np.arange(0, 1, 0.07)
@@ -213,13 +215,17 @@ if __name__ == "__main__":
                 weight.append(b)
                 weight.append(a)
                 weights_norm.append(weight)
+    """
 
     weights_norm = []
     weights_norm = data
     print(len(weights_norm))
+
     for i in range(len(weights_norm)):
         final_predictions = []
+        print("started ensembling for weights : %d" % i)
 
+        """
         if np.count_nonzero(weights_norm[i]) <= 2:
             final_predictions.append(['0', 'car', '0.0', '0.0', '0.0', '0.0', '0.0'])
             print(final_predictions)
@@ -229,10 +235,53 @@ if __name__ == "__main__":
                 wr.writerows(final_predictions)
             print("Process finished for weight :" + str(i).zfill(3))
             continue
-        print("started ensembling for weights : %d" % i)
-        for item in dets:
-            ens = GeneralEnsemble(item, weights=weights_norm[i])
+        """
 
+        for item in dets:
+            x = '111'
+            wt = weights_norm[i]
+            if np.count_nonzero(wt) <= 2:
+                if wt[0] == 0.0:
+                    item = item[1:]
+                    x = '011'
+                if wt[1] == 0.0:
+                    if x == '011':
+                        item = item[1]
+                        x = '001'
+                    elif x == '111':
+                        item = np.delete(item, 1, 0)
+                        x = '101'
+                if wt[2] == 0.0:
+                    if x == '011':
+                        item = item[0]
+                        x = '010'
+                    elif x == '101':
+                        item = item[0]
+                        x = '100'
+                    elif x == '001':
+                        x = '000'
+                        continue
+                    elif x == '111':
+                        item = item[:2]
+                        x = '110'
+
+            if x == '011':
+                wt = wt[1:]
+                ens = GeneralEnsemble(item, weights=wt)
+
+            elif x == '110':
+                wt = wt[:2]
+                ens = GeneralEnsemble(item, weights=wt)
+
+            elif x == '101':
+                wt = np.delete(wt, 1, 0)
+                ens = GeneralEnsemble(item, weights=wt)
+
+            elif x == '010' or x == '100' or x == '001':
+                ens = item
+
+            elif x == '111':
+                ens = GeneralEnsemble(item, weights=weights_norm[i])
             list_ens = eval_format_final(np.asarray(ens))
 
             # list_ens = [[((im_fname.split('/')[-1]).split('.')[0]).lstrip("0")] + x for x in list_ens]
@@ -244,18 +293,20 @@ if __name__ == "__main__":
             wr.writerows(final_predictions)
         print("Process finished for weight :" + str(i).zfill(3))
     print("results saved in csv files for all weight combinations.")
-
+    
     path = "./tuning_results"
 
     print("start evaluating mAP for all result files")
     mAP_scores = []
     j = 0
     for filename in sorted(os.listdir(path)):
+        print(filename)
         if "result_ensemble_weight" in filename:
             score = subprocess.check_output([sys.executable, '../model_evaluation/localization_evaluation.py',
                                              '../data_set_files/gt_val_0-10k.csv',
                                              '../ensemble_scripts/tuning_results/' + filename])
             score = str(weights_norm[j][:]) + ", " +score.splitlines(True)[-2]
+            print(score)
             mAP_scores.append(score)
             j+=1
 
