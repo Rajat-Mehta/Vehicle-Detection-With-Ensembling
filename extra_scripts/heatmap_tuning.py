@@ -8,23 +8,6 @@ import ternary
 from matplotlib import cm
 
 
-file_obj = open("../ensemble_scripts/tuning_results/mAP_tuned_weights.txt", "r")
-
-X=[]
-Y=[]
-Z=[]
-M=[]
-
-for item in file_obj:
-    item = item.strip()
-    if item is not "":
-        M.append(item.split(":")[-1].strip())
-        w = (item.split("M")[0].strip()[1:-2]).split(",")
-        X.append(float(w[0].strip()))
-        Y.append(float(w[1].strip()))
-        Z.append(float(w[2].strip()))
-
-
 def color_point(x, y, z, scale):
     w = 255
     x_color = x * w / float(scale)
@@ -60,9 +43,30 @@ def generate_heatmap_data_new(scale=20):
     return d
 
 
+def read_data_from_file(file_obj):
+    for item in file_obj:
+        item = item.strip()
+        if item is not "":
+            M.append(item.split(":")[-1].strip())
+            w = (item.split("M")[0].strip()[1:-2]).split(",")
+            X.append(float(w[0].strip()))
+            Y.append(float(w[1].strip()))
+            Z.append(float(w[2].strip()))
+
+
+file_obj = open("../ensemble_scripts/tuning_results/mAP_tuned_weights.txt", "r")
+
+X=[]
+Y=[]
+Z=[]
+M=[]
+
+
+read_data_from_file(file_obj)
+
+fontsize = 12
 scale = 20
 data = generate_heatmap_data_new(scale)
-print(data)
 figure, tax = ternary.figure(scale=scale)
 tax.heatmap(data, style="triangular", use_rgba=True, colorbar=True, cmap=cm.get_cmap('jet'))
 # Remove default Matplotlib Axes
@@ -70,13 +74,8 @@ tax.clear_matplotlib_ticks()
 tax.get_axes().axis('off')
 tax.boundary()
 tax.set_title("Accuracy heatmap")
+tax.left_axis_label("Faster R-CNN", fontsize=fontsize)
+tax.right_axis_label("RetinaNet", fontsize=fontsize)
+tax.bottom_axis_label("SSD", fontsize=fontsize)
+
 plt.show()
-exit()
-
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-
-
-ax.scatter(X, Y, Z, c=M, cmap=plt.cool())
-plt.show()
-
