@@ -18,6 +18,7 @@ Output:
     .rec, .idx and .lst files required by gluon cv models
 """
 
+TEST = True
 
 def normalize(size, box):
     """ normalizes the bounding boxes """
@@ -232,22 +233,31 @@ def write(train,val):
 def main():
     """ create RecordFileFormat files """
 
-    do_it()
-
     """im2rec = utils.download('https://raw.githubusercontent.com/apache/incubator-mxnet/' +
                         '6843914f642c8343aaa9a09db803b6af6f5d94a2/tools/im2rec.py', 'im2rec.py')"""
-    subprocess.check_output([sys.executable, 'im2rec.py', '../data_set_files/record_format_files/data-set_min/val.lst',
-                             '.', '--no-shuffle', '--pass-through', '--pack-label'])
-    subprocess.check_output([sys.executable, 'im2rec.py','../data_set_files/record_format_files/data-set_min/train.lst',
-                             '.', '--no-shuffle', '--pass-through', '--pack-label'])
-    record_dataset = RecordFileDetection('../data_set_files/record_format_files/data-set_min/val.rec', coord_normalized=True)
-    record_dataset = RecordFileDetection('../data_set_files/record_format_files/data-set_min/train.rec', coord_normalized=True)
+    if TEST:
+        # subprocess.check_output([sys.executable, 'im2rec.py', '--list', '--no-shuffle',
+        #                         '../data_set_files/record_format_files/data_set_test/test', '../data_set_files/test'])
+        subprocess.check_output([sys.executable, 'im2rec.py',
+                                 '../data_set_files/record_format_files/data_set_test/test_min.lst',
+                                 '.', '--no-shuffle', '--pass-through', '--pack-label'])
+        record_dataset = RecordFileDetection('../data_set_files/record_format_files/data_set_test/test_min.rec',
+                                             coord_normalized=True)
+    else:
+        do_it()
+        subprocess.check_output([sys.executable, 'im2rec.py',
+                                 '../data_set_files/record_format_files/data-set_min/val.lst',
+                                 '.', '--no-shuffle', '--pass-through', '--pack-label'])
+        subprocess.check_output([sys.executable, 'im2rec.py',
+                                 '../data_set_files/record_format_files/data-set_min/train.lst',
+                                 '.', '--no-shuffle', '--pass-through', '--pack-label'])
+
+        record_dataset = RecordFileDetection('../data_set_files/record_format_files/data-set_min/val.rec',
+                                             coord_normalized=True)
+        record_dataset = RecordFileDetection('../data_set_files/record_format_files/data-set_min/train.rec',
+                                             coord_normalized=True)
 
     print('length:', len(record_dataset))
-    first_img = record_dataset[0][0]
-    print('image shape:', first_img.shape)
-    print('Label example:')
-    print(record_dataset[0][1])
 
 
 if __name__ == "__main__":

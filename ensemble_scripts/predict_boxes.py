@@ -1,17 +1,9 @@
-from gluoncv import model_zoo, data, utils
-from matplotlib import pyplot as plt
-from gluoncv.utils import viz
+from gluoncv import model_zoo
 from gluoncv.data.batchify import Tuple, Stack, Pad
 from mxnet import autograd, gluon
-from keras_retinanet.models import load_model
-from keras_retinanet.utils.eval import evaluate
-from keras_retinanet.preprocessing.csv_generator import CSVGenerator
-from keras_retinanet.utils.transform import random_transform_generator
 import keras
 from keras_retinanet import models
 from keras_retinanet.utils.image import read_image_bgr, preprocess_image, resize_image
-from keras_retinanet.utils.colors import label_color
-from keras_retinanet.utils.visualization import draw_box, draw_caption
 from ensemble import GeneralEnsemble
 import cv2
 import csv
@@ -24,9 +16,7 @@ from gluoncv.data.transforms.presets.rcnn import FasterRCNNDefaultValTransform
 import gluoncv as gcv
 from gluoncv.data import batchify
 import pickle
-from gluoncv.data.transforms import bbox as tbbox
-from gluoncv.data.transforms import image as timage
-# from tune_weights_ensemble import *
+import fnmatch
 
 """
 Predict the detections for the input (validation) images from all of the trained models
@@ -35,10 +25,14 @@ for getting the final ensemble detections.
 """
 
 VAL_PATH = "../data_set_files/valid_mini.txt"
-val_dataset = gcv.data.RecordFileDetection('../data_set_files/record_format_files/data-set_min/val.rec',
+TEST_PATH = "../data_set_files/record_format_files/test.txt"
+validation_dataset = gcv.data.RecordFileDetection('../data_set_files/record_format_files/data-set_min/val.rec',
                                            coord_normalized=True)
+test_dataset = gcv.data.RecordFileDetection('../data_set_files/record_format_files/data_set_test/test.rec',
+                                            coord_normalized=True)
+val_dataset = test_dataset
 BATCH_SIZE = 1
-BATCH_NO = '_0-269'
+BATCH_NO = '_0-1500'
 
 
 def get_ssd_data_loader(val_dataset):
@@ -401,13 +395,15 @@ def read_retina_images(path):
     file_obj = open(path, "r")
     images = []
     image_names = []
+    num_lines = sum(1 for line in open(path))
+
     print("Reading images")
     i = 0
     for item in file_obj:
         item = item.strip()
         if item:
             if (i % 500 == 0) & (i > 0) :
-                print("Read %d/20,000 images"% i)
+                print("Read %d/%d images"% (i, num_lines))
             image_names.append(item)
 
             """
@@ -725,9 +721,11 @@ def rescale_detections(ssd, shapes):
 
 
 if __name__ == "__main__":
-
+    data_path = TEST_PATH
     print("Start of prediction and ensemble process.")
-    processed_images, image_names = read_retina_images(VAL_PATH)
+    proc_images, img_names = read_retina_images(data_path)
+    print(len(proc_images), len(img_names))
+
     retina_labels_to_names, classes, filter_classes = get_class_labels()
 
     # get models
@@ -738,7 +736,7 @@ if __name__ == "__main__":
         print("STARTED DETECTIONS FOR "+dicts[0]+"")
         dict_n = dict(dicts[1])
 
-        if dicts[0] == 'SSD':
+        if dicts[0] == 'SSDs':
             net = get_model(dict_n['model'], dict_n['weights'], classes)
             formatted_op_ssd = get_ssd_detections(net)
             np.save('./dets_numpy/formatted_op_ssd' + BATCH_NO + '.npy', formatted_op_ssd)

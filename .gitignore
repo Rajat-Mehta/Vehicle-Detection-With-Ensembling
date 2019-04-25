@@ -11,8 +11,14 @@
 
 data_set_files/train/*
 data_set_files/valid/*
+data_set_files/test/*
 ensemble_scripts/tuning_results/*
 ensemble_scripts/dets_numpy/*
 data_set_files/record_format_files/*
 models_for_ensemble/*
 results/Final_Results\.ods
+
+ensemble_scripts/ensemble\.pyc
+
+*.pyc
+
