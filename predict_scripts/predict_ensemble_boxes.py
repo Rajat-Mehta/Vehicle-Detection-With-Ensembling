@@ -309,7 +309,7 @@ if __name__ == "__main__":
 
         final_predictions = []
         print("Starting model ensembling")
-        ens = GeneralEnsemble(input_ensemble[0], weights=[0.3, 0.7, 0.2])
+        ens = GeneralEnsemble(input_ensemble[0], weights=[0.8, 0.1, 0.1])
         permutations = [6, 4, 5, 0, 1, 2, 3]
         list_ens = eval_format(np.asarray(ens), permutations)
         # list_ens = [[((im_fname.split('/')[-1]).split('.')[0]).lstrip("0")] + x for x in list_ens]

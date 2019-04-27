@@ -23,14 +23,17 @@ Predict the detections for the input (validation) images from all of the trained
 SSD, SSD-Subset and FRCNN and pass them to GeneralEnsemble method of ensemble.py
 for getting the final ensemble detections.
 """
-
+TEST = True
 VAL_PATH = "../data_set_files/valid_mini.txt"
-TEST_PATH = "../data_set_files/record_format_files/test.txt"
+TEST_PATH = "../data_set_files/record_format_files/data_set_test/test_mini.txt"
 validation_dataset = gcv.data.RecordFileDetection('../data_set_files/record_format_files/data-set_min/val.rec',
                                            coord_normalized=True)
-test_dataset = gcv.data.RecordFileDetection('../data_set_files/record_format_files/data_set_test/test.rec',
+test_dataset = gcv.data.RecordFileDetection('../data_set_files/record_format_files/data_set_test/test_min.rec',
                                             coord_normalized=True)
-val_dataset = test_dataset
+if TEST:
+    val_dataset = test_dataset
+    VAL_PATH = TEST_PATH
+
 BATCH_SIZE = 1
 BATCH_NO = '_0-1500'
 
@@ -600,9 +603,12 @@ def get_frcnn_detections(net):
     cid, score, bbox = slice_frcnn_list(cid, score, bbox, 0.40)
     print("Removed low confidence detections")
     formatted_op_frcnn = format_output(cid, score, bbox)
-
-    np.save('./dets_numpy/formatted_op_frcnn'+BATCH_NO+'.npy', formatted_op_frcnn)
-    formatted_op_frcnn_loaded = np.load('./dets_numpy/formatted_op_frcnn'+BATCH_NO+'.npy')
+    if TEST:
+        np.save('./dets_numpy/test/formatted_op_frcnn'+BATCH_NO+'.npy', formatted_op_frcnn)
+        formatted_op_frcnn_loaded = np.load('./dets_numpy/test/formatted_op_frcnn'+BATCH_NO+'.npy')
+    else:
+        np.save('./dets_numpy/formatted_op_frcnn' + BATCH_NO + '.npy', formatted_op_frcnn)
+        formatted_op_frcnn_loaded = np.load('./dets_numpy/formatted_op_frcnn' + BATCH_NO + '.npy')
 
     print(np.array_equal(formatted_op_frcnn, formatted_op_frcnn_loaded))
 
@@ -628,16 +634,18 @@ def get_retina_detections(model_retina, processed_images):
         boxes = np.asarray(boxes)
 
 
-        """new = []
-        for item in boxes:
-            i = item.astype(int)
-            new.append(i)
-        """
-
         ret_detection.append(np.atleast_2d(np.squeeze(format_retina_output(labels, scores, boxes))))
         j += 1
     ret_detection = convert_list_array_to_list_list(ret_detection)
-    np.save('./dets_numpy/retina/ret_detection'+BATCH_NO+'.npy', ret_detection)
+
+    if TEST:
+        np.save('./dets_numpy/test/retina/ret_detection'+BATCH_NO+'.npy', ret_detection)
+        ret_detection_loaded= np.load('./dets_numpy/test/retina/ret_detection'+BATCH_NO+'.npy')
+    else:
+        np.save('./dets_numpy/retina/ret_detection' + BATCH_NO + '.npy', ret_detection)
+        ret_detection_loaded = np.load('./dets_numpy/retina/ret_detection'+BATCH_NO+'.npy')
+
+    print(np.array_equal(ret_detection_loaded, ret_detection))
 
     return ret_detection
 
@@ -723,8 +731,8 @@ def rescale_detections(ssd, shapes):
 if __name__ == "__main__":
     data_path = TEST_PATH
     print("Start of prediction and ensemble process.")
-    proc_images, img_names = read_retina_images(data_path)
-    print(len(proc_images), len(img_names))
+    processed_images, imgage_names = read_retina_images(data_path)
+    print(len(processed_images), len(imgage_names))
 
     retina_labels_to_names, classes, filter_classes = get_class_labels()
 
@@ -739,9 +747,16 @@ if __name__ == "__main__":
         if dicts[0] == 'SSDs':
             net = get_model(dict_n['model'], dict_n['weights'], classes)
             formatted_op_ssd = get_ssd_detections(net)
-            np.save('./dets_numpy/formatted_op_ssd' + BATCH_NO + '.npy', formatted_op_ssd)
-            formatted_op_ssd_loaded = np.load(
-                './dets_numpy/formatted_op_ssd' + BATCH_NO + '.npy')
+
+            if TEST:
+                np.save('./dets_numpy/test/formatted_op_ssd' + BATCH_NO + '.npy', formatted_op_ssd)
+                formatted_op_ssd_loaded = np.load(
+                    './dets_numpy/test/formatted_op_ssd' + BATCH_NO + '.npy')
+            else:
+                np.save('./dets_numpy/formatted_op_ssd' + BATCH_NO + '.npy', formatted_op_ssd)
+                formatted_op_ssd_loaded = np.load(
+                    './dets_numpy/formatted_op_ssd' + BATCH_NO + '.npy')
+
             print(np.array_equal(formatted_op_ssd, formatted_op_ssd_loaded))
 
         elif dicts[0] == 'FASTER-RCNN':
@@ -751,9 +766,16 @@ if __name__ == "__main__":
         elif dicts[0] == 'SSD-EXPERT':
             net = get_model(dict_n['model'], dict_n['weights'], filter_classes)
             formatted_op_ssd_expert = get_ssd_detections(net)
-            np.save('./dets_numpy/formatted_op_ssd_expert' + BATCH_NO + '.npy', formatted_op_ssd_expert)
-            formatted_op_ssd_expert_loaded = np.load(
-                './dets_numpy/formatted_op_ssd_expert' + BATCH_NO + '.npy')
+
+            if TEST:
+                np.save('./dets_numpy/test/formatted_op_ssd_expert' + BATCH_NO + '.npy', formatted_op_ssd_expert)
+                formatted_op_ssd_expert_loaded = np.load(
+                    './dets_numpy/test/formatted_op_ssd_expert' + BATCH_NO + '.npy')
+            else:
+                np.save('./dets_numpy/formatted_op_ssd_expert' + BATCH_NO + '.npy', formatted_op_ssd_expert)
+                formatted_op_ssd_expert_loaded = np.load(
+                    './dets_numpy/formatted_op_ssd_expert' + BATCH_NO + '.npy')
+
             print(np.array_equal(formatted_op_ssd_expert, formatted_op_ssd_expert_loaded))
 
     print("Finished SSD and FRCNN detections")
