@@ -18,6 +18,7 @@ import gluoncv as gcv
 from gluoncv.data import batchify
 import pickle
 import matplotlib.image as mpimg
+from predict_resnet import predict, plot_pred
 
 """
 This file can be used to make predictions on new images using our Adaptive Weight based model ensemble
@@ -108,7 +109,7 @@ def get_ssd_detections(net, image_names):
     x, image = gcv.data.transforms.presets.ssd.load_test(image_names, 512)
     cid, score, bbox = net(x)
     cid, score, bbox = slice_frcnn_list(cid, score, bbox, 0.20)
-    ax = viz.plot_bbox(image, bbox[0], score[0], cid[0], class_names=classes)
+    # ax = viz.plot_bbox(image, bbox[0], score[0], cid[0], class_names=classes)
 
     return cid, score, bbox
 
@@ -124,10 +125,11 @@ def get_frcnn_detections(net, image_names):
     return cid, score, bbox
 
 
-def plot_bbox(img, bbox, score, cid, classes):
+def plot_bbox(img, bbox, score, cid, classes, model):
     """ plots bounding boxes on the given image """
-
+    print("Plotting")
     ax = viz.plot_bbox(img, bbox, score, cid, thresh=0.5, class_names=classes)
+    plt.suptitle(model)
     plt.show()
 
 
@@ -195,6 +197,7 @@ def replace_id_with_name(lst, filter):
 
     filter_classes = {0: "bicycle", 1: "motorcycle", 2: "motorized_vehicle", 3: "pedestrian", 4: "work_van",
                       5: "non-motorized_vehicle"}
+    print(lst)
     if filter:
         classes = filter_classes
     else:
@@ -204,27 +207,30 @@ def replace_id_with_name(lst, filter):
     return lst
 
 
-def add_image_names_to_detections(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, name):
+def add_image_names_to_detections(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection, name):
     """ Adding image names to the detection result lists """
 
     [j.insert(len(j), name.strip()) for j in formatted_op_ssd]
     [j.insert(len(j), name.strip()) for j in formatted_op_frcnn]
     [j.insert(len(j), name.strip()) for j in formatted_op_ssd_expert]
+    [j.insert(len(j), name.strip()) for j in ret_detection[0]]
 
-    return formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert
+    return formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection[0]
 
 
-def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert):
+def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, formatted_op_ssd_expert, ret_detection):
     """ creating a new list with detections from all models to feed into the model ensemble method """
 
     input_ensemble = []
     temp = []
-    temp_ssd = formatted_op_ssd
+    #temp_ssd = formatted_op_ssd
     temp_frcnn = formatted_op_frcnn
     temp_expert = formatted_op_ssd_expert
-    temp.append(temp_ssd)
+    temp_ret = ret_detection
+    #temp.append(temp_ssd)
     temp.append(temp_frcnn)
     temp.append(temp_expert)
+    temp.append(temp_ret)
     input_ensemble.append(temp)
 
     return input_ensemble
@@ -286,17 +292,20 @@ if __name__ == "__main__":
                 cid, score, bbox = get_ssd_expert_detections(net, image )
                 formatted_ssd_expert = format_output(cid, score, bbox)
 
+        ret_detection, draw = predict(image)
+
         print("Adding image names to the result list")
-        formatted_ssd, formatted_frcnn, formatted_ssd_expert = add_image_names_to_detections(
-            formatted_ssd, formatted_frcnn, formatted_ssd_expert, name)
+        formatted_ssd, formatted_frcnn, formatted_ssd_expert, ret_detection = add_image_names_to_detections(
+            formatted_ssd, formatted_frcnn, formatted_ssd_expert, ret_detection, name)
 
         print("Replacing integer class ids with class names")
         formatted_ssd = replace_id_with_name(formatted_ssd, False)
         formatted_frcnn = replace_id_with_name(formatted_frcnn, False)
         formatted_ssd_expert = replace_id_with_name(formatted_ssd_expert, True)
+        retina = replace_id_with_name(ret_detection, False)
 
         print("Formatting list to feed into the model ensemble method")
-        input_ensemble = format_list_for_ensemble(formatted_ssd, formatted_frcnn, formatted_ssd_expert)
+        input_ensemble = format_list_for_ensemble(formatted_ssd, formatted_frcnn, formatted_ssd_expert, ret_detection)
 
         final_predictions = []
         print("Starting model ensembling")
@@ -309,4 +318,4 @@ if __name__ == "__main__":
         bbox, cid, score = convert_to_plot_box_format(final_predictions)
         x, image = gcv.data.transforms.presets.ssd.load_test(image, 512)
 
-        plot_bbox(image, mx.nd.array(bbox), mx.nd.array(score), mx.nd.array(cid), classes)
+        plot_bbox(image, mx.nd.array(bbox), mx.nd.array(score), mx.nd.array(cid), classes, "Ensemble")

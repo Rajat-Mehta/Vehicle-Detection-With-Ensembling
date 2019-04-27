@@ -22,3 +22,5 @@ ensemble_scripts/ensemble\.pyc
 
 *.pyc
 
+
+results/\.~lock\.Final_Results\.ods#
