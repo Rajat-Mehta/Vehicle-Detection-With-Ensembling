@@ -22,14 +22,17 @@ Output:
     then be used by localization_evaluation.py file to generate mAP of our ensemble model
 """
 
-DET_PATH_SSD_EXPERT = "./dets_numpy/ssd_expert/"
+DET_PATH_SSD_EXPERT = "./dets_numpy/test/ssd_expert/"
 DET_PATH_SSD = "./dets_numpy/ssd"
-DET_PATH_FRCNN = "./dets_numpy/frcnn"
-DET_PATH_RETINA = "./dets_numpy/retina/"
-DET_PATH_COMBINED = "./dets_numpy/input_ensembles"
+DET_PATH_FRCNN = "./dets_numpy/test/frcnn"
+DET_PATH_RETINA = "./dets_numpy/test/retina/"
+DET_PATH_COMBINED = "./dets_numpy/test/input_ensembles"
 VALID = "../data_set_files/valid.txt"
 VAL_IMAGE_NAMES = "../data_set_files/val_image_names.txt"
-BATCH_NO = "_0-20000_sfe"
+TEST_PATH = "../data_set_files/record_format_files/data_set_test/test.txt"
+TEST_IMAGE_NAMES = "../data_set_files/record_format_files/data_set_test/test_image_names.txt"
+
+BATCH_NO = "_0-27743_fsr"
 
 
 def eval_format(ens_detections):
@@ -122,11 +125,13 @@ def read_retina_image_shapes(path):
     shapes = []
     print("Reading image sizes")
     i = 0
+    num_lines = sum(1 for line in open(path))
+
     for item in file_obj:
         item = item.strip()
         if item:
             if (i % 500 == 0) & (i > 0):
-                print("Read %d/20,000 images"% i)
+                print("Read %d/%d images"% (i, num_lines))
             image = read_image_bgr(item)
             shapes.append(image.shape)
         i += 1
@@ -206,11 +211,11 @@ def replace_id_with_name(lst, filter):
     return lst
 
 
-def format_list_for_ensemble(formatted_op_ssd, formatted_op_frcnn, ssd_expert, ret_detection):
+def format_list_for_ensemble(formatted_op_frcnn, ssd_expert, ret_detection):
     """ creating a new list with detections from all models to feed into the model ensemble method """
 
     input_ensemble = []
-    for item in range(0, len(formatted_op_ssd)):
+    for item in range(0, len(formatted_op_frcnn)):
         temp = []
         #temp_ssd = formatted_op_ssd[item]
         temp_frcnn = formatted_op_frcnn[item]
@@ -247,7 +252,7 @@ def write_csv_from_npy(path):
             file.extend(formatted_op_loaded)
     npy = file
 
-    with open('../data_set_files/image_shapes', 'rb') as fp:
+    with open('../data_set_files/record_format_files/data_set_test/test_image_shapes', 'rb') as fp:
         shapes = pickle.load(fp)
 
     if "ssd" in file_type:
@@ -274,34 +279,36 @@ def write_csv_from_npy(path):
     return npy
 
 
-image_names = read_image_names_from_list(VAL_IMAGE_NAMES)
+image_names = read_image_names_from_list(TEST_IMAGE_NAMES)
 
 """
 uncomment this if you want to use retina model in ensemble
-shapes = read_retina_image_shapes(VALID)
-with open('image_shapes', 'wb') as fp:
+
+shapes = read_retina_image_shapes(TEST_PATH)
+with open('../data_set_files/record_format_files/data_set_test/test_image_shapes', 'wb') as fp:
     pickle.dump(shapes, fp)
 
-with open ('image_shapes', 'rb') as fp:
+with open ('../data_set_files/record_format_files/data_set_test/test_image_shapes', 'rb') as fp:
     shapes = pickle.load(fp)
 """
 
 formatted_op_ssd_expert_npy = write_csv_from_npy(DET_PATH_SSD_EXPERT)
-formatted_op_ssd_npy = write_csv_from_npy(DET_PATH_SSD)
 formatted_op_frcnn_npy = write_csv_from_npy(DET_PATH_FRCNN)
 ret_detection_npy = write_csv_from_npy(DET_PATH_RETINA)
+# formatted_op_ssd_npy = write_csv_from_npy(DET_PATH_SSD)
 
 # print(len(formatted_op_ssd_npy))
-# print(len(formatted_op_frcnn_npy))
-# print(len(formatted_op_ssd_expert_npy))
-# print(len(ret_detection_npy))
-input_ensemble_npy = format_list_for_ensemble(formatted_op_ssd_npy, formatted_op_frcnn_npy, formatted_op_ssd_expert_npy, ret_detection_npy)
+print(len(formatted_op_frcnn_npy))
+print(len(formatted_op_ssd_expert_npy))
+print(len(ret_detection_npy))
+
+input_ensemble_npy = format_list_for_ensemble(formatted_op_frcnn_npy, formatted_op_ssd_expert_npy, ret_detection_npy)
 print(len(input_ensemble_npy))
-np.save('./dets_numpy/input_ensembles/input_ensembles' + BATCH_NO + '.npy', input_ensemble_npy)
+np.save('./dets_numpy/test/input_ensembles/input_ensembles' + BATCH_NO + '.npy', input_ensemble_npy)
 
 # first half of validation set was used for tuning the weight parameters and second half is being used here
 # for evaluating the selected optimal weight parameters
-input_ensemble_npy = input_ensemble_npy[len(input_ensemble_npy) / 2:]
+# input_ensemble_npy = input_ensemble_npy[len(input_ensemble_npy) / 2:]
 print(len(input_ensemble_npy))
 
 print("Starting model ensembling")
@@ -314,7 +321,7 @@ for item in input_ensemble_npy:
 print("Finished ensembling.")
 
 print("Writing ensembled results to csv")
-with open("./dets_numpy/results/result_ensemble_sfe.csv", 'w') as myfile:
+with open("./dets_numpy/test/results/result_ensemble_fsr.csv", 'w') as myfile:
     wr = csv.writer(myfile)
     wr.writerows(final_predictions)
 

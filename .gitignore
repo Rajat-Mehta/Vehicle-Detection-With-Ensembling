@@ -24,3 +24,7 @@ ensemble_scripts/ensemble\.pyc
 
 
 results/\.~lock\.Final_Results\.ods#
+
+*.csv#
+
+*.csv

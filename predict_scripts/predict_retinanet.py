@@ -80,54 +80,59 @@ def slice_frcnn_list(cid, score, bbox, thresh):
         else:
             cid_new.append(np.asarray([0]))
             score_new.append(np.asarray([0]))
-            bbox_new.append(np.asarray([[0, 0, 0, 0]]))
+            bbox_new.append(np.asarray([[0.0, 0.0, 0.0, 0.0]]))
         i += 1
 
     return cid_new, score_new, bbox_new
 
 
-def predict(image):
+def predict(image_list):
     ret_detection = []
+    draws = []
+    x = 0
 
-    # load image
-    image = read_image_bgr(image)
+    for img in image_list:
+        # load image
+        if (x % 50 == 0):
+            print("Image No.: %d out of %d images(RetinaNet)"% (x, len(image_list)))
+        image = read_image_bgr(img)
 
-    # copy to draw on
-    draw = image.copy()
-    draw = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
+        # copy to draw on
+        draw = image.copy()
+        draw = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
 
-    # preprocess image for network
-    image = preprocess_image(image)
-    image, scale = resize_image(image)
+        # preprocess image for network
+        image = preprocess_image(image)
+        image, scale = resize_image(image)
 
-    # process image
-    start = time.time()
-    boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
+        # process image
+        start = time.time()
+        boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
 
+        # print("processing time: ", time.time() - start)
 
-    print("processing time: ", time.time() - start)
+        labels, scores, boxes = slice_frcnn_list(labels, scores, boxes, 0.35)
 
-    labels, scores, boxes = slice_frcnn_list(labels, scores, boxes, 0.35)
-    print(boxes)
-    print(scale)
-    # correct for image scale
-    boxes[0] /= scale
+        # correct for image scale
 
-    new = []
-    for item in boxes:
-        i = item.astype(int)
-        new.append(i)
-    labels = np.asarray(labels)
-    scores = np.asarray(scores)
-    boxes = np.asarray(boxes)
+        boxes[0] /= scale
 
-    plot_pred(boxes, scores, labels, draw)
+        new = []
+        for item in boxes:
+            i = item.astype(int)
+            new.append(i)
+        labels = np.asarray(labels)
+        scores = np.asarray(scores)
+        boxes = np.asarray(boxes)
 
-    ret_detection.append(np.atleast_2d(np.squeeze(format_retina_output(labels, scores, boxes))))
+        # plot_pred(boxes, scores, labels, draw)
 
+        ret_detection.append(np.atleast_2d(np.squeeze(format_retina_output(labels, scores, boxes))))
+        draws.append(draw)
+        x+=1
     ret_detection = convert_list_array_to_list_list(ret_detection)
 
-    return ret_detection, draw
+    return ret_detection, draws
 
 
 def plot_pred(boxes, scores, labels, draw):
@@ -159,4 +164,4 @@ def plot_pred(boxes, scores, labels, draw):
 
 if __name__=="__main__":
 
-    predict('../sample_data/00006992.jpg')
+    predict(['../sample_data/00006992.jpg'])
