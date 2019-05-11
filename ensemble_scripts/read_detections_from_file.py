@@ -255,8 +255,8 @@ def write_csv_from_npy(path):
     with open('../data_set_files/record_format_files/data_set_test/test_image_shapes', 'rb') as fp:
         shapes = pickle.load(fp)
 
-    if "ssd" in file_type:
-        npy = rescale_detections(npy, shapes)
+    # if "ssd" in file_type:
+    #    npy = rescale_detections(npy, shapes)
 
     npy = add_image_names_to_detections(npy, image_names)
 
