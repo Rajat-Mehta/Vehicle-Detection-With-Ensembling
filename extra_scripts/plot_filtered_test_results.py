@@ -94,17 +94,20 @@ def preprocess_image_retina(im_fname):
 
 
 with open(TEST_RESULT_PATH, "r") as f:
+    print(f)
     reader = csv.reader(f, delimiter=",")
     filtered_results = []
     for i, line in enumerate(reader):
+
         if float(line[2]) > THRESH:
             line[0] = line[0].zfill(8)
+            line[3] = int(float(line[3]))
+
             line[3] = int(float(line[3]))
             line[4] = int(float(line[4]))
             line[5] = int(float(line[5]))
             line[6] = int(float(line[6]))
             filtered_results.append(line)
-
 
 print("Writing filtered results to csv")
 with open("../ensemble_scripts/dets_numpy/test/results/filtered_result_ensemble_fsr_" + str(THRESH) + ".csv", 'w') as myfile:
@@ -114,11 +117,18 @@ classes = ['car', 'articulated_truck', 'bus', 'bicycle', 'motorcycle', 'motorize
                     'single_unit_truck', 'work_van', 'pickup_truck', 'non-motorized_vehicle']
 
 image_names = [
-                    '../data_set_files/test/00111119.jpg'
-                    ]
+    #'../data_set_files/test/00111119.jpg'
+    #'../data_set_files/test/00129733.jpg'
+    #'../data_set_files/test/00135693.jpg'
+    #'../data_set_files/test/00122999.jpg'
+    #'../data_set_files/test/00118639.jpg'
+    #'../data_set_files/test/00117410.jpg'
+    '../data_set_files/test/00110602.jpg'
+    #'../data_set_files/test/00115203.jpg'
+]
 
 processed_images = read_retina_images(image_names)
-inp = filtered_results[1780:1788]
+inp = filtered_results[17:21]
 print(inp)
 print(len(inp))
 bbox, cid, score = convert_to_plot_box_format(inp)
